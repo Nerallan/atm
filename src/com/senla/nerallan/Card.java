@@ -1,5 +1,5 @@
 package com.senla.nerallan;
 
-public class Card {
+public class  Card {
 
 }
