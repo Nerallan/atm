@@ -8,7 +8,7 @@ public class TestAtm {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         Atm atm = new Atm();
-        while (true){
+        while (true) {
             atm.displayAtmMenu();
             int operation = Integer.parseInt(bufferedReader.readLine());
             atm.selectOperation(operation);

@@ -32,9 +32,9 @@ public class Account {
             double tempBalance = balance;
             if (firstTime) {
                 tempBalance -= amount;
-                if (tempBalance >= 0){
+                if (tempBalance >= 0) {
                     balance -= amount;
-                    System.out.println("FIRST TIME You withdraw " + amount + " from your account.\nThe new balance is " + balance );
+                    System.out.println("FIRST TIME You withdraw " + amount + " from your account.\nThe new balance is " + balance);
                 } else {
                     System.err.println("Insufficient balance in the account to withdraw " + amount);
                     System.err.println("Current balance " + balance);
@@ -43,7 +43,7 @@ public class Account {
             } else {
                 Atm atm = new Atm();
                 tempBalance = tempBalance - amount - atm.getTransactionFees();
-                if (tempBalance >= 0){
+                if (tempBalance >= 0) {
                     balance -= amount - atm.getTransactionFees();
                     System.out.println("You withdraw " + amount + " from your account.\nThe new balance is " + balance + " Transaction fees " + atm.getTransactionFees());
                 } else {
@@ -55,7 +55,7 @@ public class Account {
         }
     }
 
-    public String getAccountNumber(){
+    public String getAccountNumber() {
         return accountNumber;
     }
 
