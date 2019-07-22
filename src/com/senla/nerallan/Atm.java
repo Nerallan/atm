@@ -1,177 +1,67 @@
 package com.senla.nerallan;
 
-import com.senla.nerallan.exceptions.InvalidAccountException;
-import com.senla.nerallan.exceptions.InvalidPinException;
-import com.senla.nerallan.interfaces.AccountInterface;
-import com.senla.nerallan.interfaces.AtmInterface;
+import com.senla.nerallan.db.CardFileDB;
+import com.senla.nerallan.interfaces.CardCredentialsValidator;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
-public class Atm implements AtmInterface {
+public class Atm implements CardCredentialsValidator {
 
-    private double interestRate = 2;
-    private double transactionFees = 10;
-    private List<Customer> customerList = new ArrayList<>();
+    private static final String CREDENTALS_DB_NAME = "cards_credentials";
+    private static HashMap<String, String> credentials;
+    private CardFileDB cardFileDB;
 
-    public void calculateInterest(Customer customer) {
-        Account account = customer.getAccount();
-        double balance = account.getCurrentBalance();
-        double interestAmount = balance * interestRate / 100;
-        double totalBalance = balance + interestAmount;
-        System.out.println("Interest amount: " + interestAmount + "\nTotal money after adding interests: " + totalBalance);
+    public Atm() throws IOException {
+        cardFileDB = new CardFileDB();
+        credentials = cardFileDB.readTextFile(CREDENTALS_DB_NAME);
     }
 
-    public double getInterestRate() {
-        return interestRate;
-    }
-
-    public double getTransactionFees() {
-        return transactionFees;
-    }
-
-    public List<Customer> getCustomerList() {
-        return customerList;
-    }
 
     @Override
-    public void displayAtmMenu() {
-        System.out.println("========================================");
-        System.out.println("Please enter desired operation:");
-        System.out.println("[1] Add Customer");
-        System.out.println("[2] Deposit Money");
-        System.out.println("[3] Withdraw Money");
-        System.out.println("[4] Check Balance");
-        System.out.println("[5] Calculate Interests");
-        System.out.println("[0] Exit");
-        System.out.println("========================================");
-    }
-
-    @Override
-    public void login(String cardNumber, String password) throws InvalidAccountException, InvalidPinException {
-
-    }
-
-    @Override
-    public void selectOperation(int operation) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
-        customerList = getCustomerList();
-        switch (operation) {
-            case 1:
-                System.out.println("Creating account for a new customer: ");
-                System.out.println("Please enter the initial amount in your account: ");
-                double balance = Double.parseDouble(bufferedReader.readLine());
-                System.out.println("Please enter your account number: ");
-                String accountNum = bufferedReader.readLine();
-                Account account = new Account(balance, accountNum);
-                System.out.println("Please enter your name: ");
-                String name = bufferedReader.readLine();
-                Customer customer = new Customer(name, account);
-                customerList.add(customer);
-                System.out.println("Number of customers: " + customerList.size());
-                for (Customer c : customerList) {
-                    System.out.println(c.getName() + " name");
-                }
-                break;
-            case 2:
-                System.out.println("Enter account number ");
-                accountNum = bufferedReader.readLine();
-                if (customerList.isEmpty()) {
-                    System.out.println("Account number not found!");
+    public boolean isCardNumValid(String cardNum) throws IOException {
+        String cardMatcher = "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}";
+//        String validNumber = "1111-2222-3333-4444";
+        if (cardNum.length() == 19) {
+            if (cardNum.matches(cardMatcher)) {
+                if(isSuchCardInDB(cardNum)){
+                    return true;
                 } else {
-                    boolean accountFound = false;
-                    for (int index = 0; index < customerList.size(); index++) {
-                        Account accountTemp = customerList.get(index).getAccount();
-                        String accountNumTemp = accountTemp.getAccountNumber();
-                        if (accountNum.equals(accountNumTemp)) {
-                            System.out.println("Please enter the amount to deposit ");
-                            double moneyAmount = Double.parseDouble(bufferedReader.readLine());
-                            accountTemp.deposit(moneyAmount);
-                            accountFound = true;
-                        }
-                    }
-                    if (!accountFound) {
-                        System.out.println("Account number not found!");
-                    }
+                    System.out.print("Card with such number doesn't exist. Try again!\nCARD NUMBER: ");
+                    return false;
                 }
-                break;
-            case 3:
-                System.out.println("Enter account number ");
-                accountNum = bufferedReader.readLine();
-                if (customerList.isEmpty()) {
-                    System.out.println("Account number not found!");
-                } else {
-                    boolean accountFound = false;
-                    for (int index = 0; index < customerList.size(); index++) {
-                        Account accountTemp = customerList.get(index).getAccount();
-                        String accountNumTemp = accountTemp.getAccountNumber();
-                        if (accountNum.equals(accountNumTemp)) {
-                            System.out.println("Please enter the amount to withdraw ");
-                            double moneyAmount = Double.parseDouble(bufferedReader.readLine());
-                            accountTemp.withdraw(moneyAmount);
-                            accountFound = true;
-                        }
-                    }
-                    if (!accountFound) {
-                        System.out.println("Account number not found!");
-                    }
-                }
-                break;
-            case 4:
-                System.out.println("Enter account number ");
-                accountNum = bufferedReader.readLine();
-                if (customerList.isEmpty()) {
-                    System.out.println("Account number not found!");
-                } else {
-                    boolean accountFound = false;
-                    for (int index = 0; index < customerList.size(); index++) {
-                        Account accountTemp = customerList.get(index).getAccount();
-                        String accountNumTemp = accountTemp.getAccountNumber();
-                        if (accountNum.equals(accountNumTemp)) {
-                            System.out.println("Balance is: " + accountTemp.getCurrentBalance());
-                            accountFound = true;
-                        }
-                    }
-                    if (!accountFound) {
-                        System.out.println("Account number not found!");
-                    }
-                }
-                break;
-            case 5:
-                System.out.println("Enter account number ");
-                accountNum = bufferedReader.readLine();
-                if (customerList.isEmpty()) {
-                    System.out.println("Account number not found!");
-                } else {
-                    boolean accountFound = false;
-                    for (int index = 0; index < customerList.size(); index++) {
-                        Account accountTemp = customerList.get(index).getAccount();
-                        String accountNumTemp = accountTemp.getAccountNumber();
-                        if (accountNum.equals(accountNumTemp)) {
-                            calculateInterest(customerList.get(index));
-                            accountFound = true;
-                        }
-                    }
-                    if (!accountFound) {
-                        System.out.println("Account number not found!");
-                    }
-                }
-                break;
-            case 0:
-                exit();
-                break;
-            default:
-                break;
-
+            } else {
+                System.out.print("Card number should contain only digits and -\nNumber template XXXX-XXXX-XXXX-XXXX. Try again!\nCARD NUMBER: ");
+                return false;
+            }
+        } else {
+            System.out.print("The length of the card number does not match the specified template XXXX-XXXX-XXXX-XXXX. Try again!\nCARD NUMBER: ");
+            return false;
         }
     }
 
     @Override
-    public void exit() {
-        System.exit(0);
+    public boolean isCardPinCorrect(String inputCardNum, String inputPin) {
+        String passwordMatcher = "[0-9]{4,8}";
+        if (!inputPin.isEmpty() && inputPin.matches(passwordMatcher)) {
+            if (inputPin.equals(credentials.get(inputCardNum))){
+                return true;
+            } else {
+                System.out.print("Incorrect PIN. Try again!\nPIN CODE: ");
+                return false;
+            }
+        } else {
+            System.out.print("Error! Password should contain only digits in quantity from 4 to 8. Try again!\nPIN CODE: ");
+            return false;
+        }
+    }
+
+    private boolean isSuchCardInDB(String inputCardNum) {
+        for (String num : credentials.keySet()){
+            if (num.equals(inputCardNum)){
+                return true;
+            }
+        }
+    return false;
     }
 }
