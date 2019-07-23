@@ -15,9 +15,6 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
 
     public Account(String accountNumber, int balance, Date operationDate, boolean isActive) {
         this.accountNumber = accountNumber;
@@ -26,6 +23,9 @@ public class Account {
         this.isActive = isActive;
     }
 
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
 
     public Date getOperationDate() {
         return operationDate;

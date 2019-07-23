@@ -20,7 +20,7 @@ public class BalanceRequest extends Transaction {
 
     @Override
     public boolean displayMessage(Map<String, Integer> message, int transactionId) {
-        if(message.get("isSuccess") == 1) {
+        if(message.get("Success") == 1) {
             consoleManager.setScreen("Your Account Balance is: " + String.valueOf(message.get("balance")), false);
             return true;
         } else {

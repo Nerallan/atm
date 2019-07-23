@@ -20,7 +20,7 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
     private static final String ATM_DB_NAME = "atm_db";
     private static HashMap<String, String> credentials;
 
-    private Map<String, Integer> serverReply;
+    private Map<String, Integer> serverReply = new HashMap<>();
     private List<Account> accountList;
     private CardFileDB cardFileDB;
     private AtmFileDB atmFileDB;
@@ -48,13 +48,13 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
 
     private boolean withdraw(String cardNum, int amount) {
         boolean operationPerform = false;
-        for (Account account : accountList) {
-            if (cardNum.equals(account.getAccountNumber())) {
-                int balance = account.getCurrentBalance();
+        for (int index = 0; index < accountList.size(); index++) {
+            if (cardNum.equals(accountList.get(index).getAccountNumber())) {
+                int balance = accountList.get(index).getCurrentBalance();
                 AtmCashManager cashManager = new AtmCashManager();
                 if (balance >= amount && cashManager.isCashAmountAvailable(amount)) {
                     balance -= amount;
-                    account.setBalance(balance);
+                    accountList.get(index).setBalance(balance);
                     operationPerform = true;
                 }
             }
@@ -64,14 +64,14 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
 
     private boolean deposit(String cardNum, int amount){
         boolean operationPerform = false;
-        for (Account account : accountList) {
-            if (cardNum.equals(account.getAccountNumber())) {
-                int balance = account.getCurrentBalance();
+        for (int index = 0; index < accountList.size(); index++) {
+            if (cardNum.equals(accountList.get(index).getAccountNumber())) {
+                int balance = accountList.get(index).getCurrentBalance();
                 AtmCashManager cashManager = new AtmCashManager();
                 try {
                     if (cashManager.isPossibleToDeposit(amount)) {
                         balance += amount;
-                        account.setBalance(balance);
+                        accountList.get(index).setBalance(balance);
                         operationPerform = true;
                     }
                 } catch (DepositAmountExceedException e) {
@@ -83,12 +83,13 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
     }
 
     private int getBalance(String cardNum){
-        for (Account account : accountList) {
-            if (cardNum.equals(account.getAccountNumber())) {
-                return account.getCurrentBalance();
+        int balance = -1;
+        for (int index = 0; index < accountList.size(); index++){
+            if (cardNum.equals(accountList.get(index).getAccountNumber())){
+                balance = accountList.get(index).getCurrentBalance();
             }
         }
-        return -1;
+        return balance;
     }
 
 
@@ -111,10 +112,10 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
                 }
                 return serverReply;
             case 3:
-                int bal = getBalance(cardNumber);
-                if (bal != -1.0) {
+                int balance = getBalance(cardNumber);
+                if (balance != -1.0) {
                     serverReply.put("Success", 1);
-                    serverReply.put("balance", bal);
+                    serverReply.put("balance", balance);
                 } else {
                     serverReply.put("Success", 0);
                     serverReply.put("balance", -1);

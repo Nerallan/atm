@@ -19,7 +19,7 @@ public class TestAtm {
 
     private static String inputCardNum = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, DbNotFountException {
 
         consoleManager = new ConsoleManager();
         consoleManager.displayWelcomeScreen();
@@ -42,12 +42,15 @@ public class TestAtm {
                     Transaction currentTransaction = Transaction.setTransaction(account, operation);
                     if (currentTransaction != null){
                         try {
+                            atmServerInterface = new AtmServer();
                             currentTransaction.performTransaction(account, atmServerInterface, operation);
                         } catch (IOException e) {
                             e.printStackTrace();
                             System.out.println(e.getMessage());
                         }
                     }
+                } else {
+                    System.out.println("No such operation! Select from 0 to 4");
                 }
             }
         }
