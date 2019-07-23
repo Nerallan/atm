@@ -23,6 +23,9 @@ public class BalanceRequest extends Transaction {
         if(message.get("Success") == 1) {
             consoleManager.setScreen("Your Account Balance is: " + String.valueOf(message.get("balance")), false);
             return true;
+        } else if (message.get("wrong") == 0){
+            consoleManager.setScreen("Something goes wrong ", false);
+            return false;
         } else {
             consoleManager.setScreen("Couldn't retrieve the balance", false);
             return false;

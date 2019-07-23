@@ -38,8 +38,13 @@ public class ConsoleManager implements ConsoleManagerInterface{
 
     @Override
     public int inputDigits(){
-        int digits =  scanner.nextInt();
-        return digits;
+        String numStr =  scanner.next();
+        boolean isNumber = numStr.matches("[0-9]{1,10}");
+        if (isNumber){
+            return Integer.parseInt(numStr);
+        } else {
+            return -1;
+        }
     }
 
 

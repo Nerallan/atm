@@ -25,6 +25,9 @@ public class Deposit extends Transaction {
         if (message.get("Success") == 1){
             consoleManager.setScreen("Cash successfully deposit ", false);
             return true;
+        } else if (message.get("Success") == -1){
+            consoleManager.setScreen("Something goes wrong ", false);
+            return false;
         } else {
             consoleManager.setScreen("Some error occurred while performint operation ", false);
             return false;

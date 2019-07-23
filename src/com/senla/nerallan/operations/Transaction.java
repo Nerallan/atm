@@ -6,6 +6,7 @@ import com.senla.nerallan.exceptions.InsufficientFundsException;
 import com.senla.nerallan.interfaces.AtmServerInterface;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Transaction {
@@ -39,6 +40,9 @@ public abstract class Transaction {
         Map<String, Integer> serverReply = null;
         if (cashAmount != -1) {
             serverReply = atmServerInterface.operationPerform(account.getAccountNumber(), cashAmount, operation);
+        } else {
+            serverReply = new HashMap<>();
+            serverReply.put("Success", cashAmount);
         }
         return displayMessage(serverReply, transactionId);
     }
