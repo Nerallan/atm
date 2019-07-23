@@ -34,20 +34,26 @@ public class TestAtm {
         }
 
         if (isLogin()) {
+            Account account = new Account(inputCardNum);
+            try {
+                atmServerInterface = new AtmServer();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+                System.out.println(exception.getMessage());
+            }
             while (true) {
                 consoleManager.displayAtmMenu();
                 int operation = consoleManager.inputDigits();
                 if (operation == 1 || operation == 2 || operation == 3 || operation == 0){
-                    Account account = new Account(inputCardNum);
                     Transaction currentTransaction = Transaction.setTransaction(account, operation);
                     if (currentTransaction != null){
                         try {
-                            atmServerInterface = new AtmServer();
                             currentTransaction.performTransaction(account, atmServerInterface, operation);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            System.out.println(e.getMessage());
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                            System.out.println(exception.getMessage());
                         }
+
                     }
                 } else {
                     System.out.println("No such operation! Select from 0 to 4");
