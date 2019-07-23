@@ -38,10 +38,7 @@ public class ConsoleManager implements ConsoleManagerInterface{
 
     @Override
     public int inputDigits(){
-        int digits = 0;
-        while(scanner.hasNextInt()){
-            digits = scanner.nextInt();
-        }
+        int digits =  scanner.nextInt();
         return digits;
     }
 

@@ -5,12 +5,12 @@ import com.senla.nerallan.exceptions.InsufficientFundsException;
 
 public class AtmCashManager {
     public static final int MAX_DEPOSIT_PER_TRANSACTION = 1000000;
-    private static final int CURRENT_BALANCE = 10000;
+    private static final int CURRENT_ATM_BALANCE = 10000;
 
     private int availableCash;
 
     public AtmCashManager(){
-        availableCash = CURRENT_BALANCE;
+        availableCash = CURRENT_ATM_BALANCE;
     }
 
 
