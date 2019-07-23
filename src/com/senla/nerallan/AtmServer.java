@@ -45,8 +45,8 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
     }
 
 
-
-    private boolean withdraw(String cardNum, int amount) {
+    @Override
+    public boolean withdraw(String cardNum, int amount) {
         boolean operationPerform = false;
         for (int index = 0; index < accountList.size(); index++) {
             if (cardNum.equals(accountList.get(index).getAccountNumber())) {
@@ -64,7 +64,8 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
         return operationPerform;
     }
 
-    private boolean deposit(String cardNum, int amount){
+    @Override
+    public boolean deposit(String cardNum, int amount){
         boolean operationPerform = false;
         for (int index = 0; index < accountList.size(); index++) {
             if (cardNum.equals(accountList.get(index).getAccountNumber())) {
@@ -86,7 +87,8 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
         return operationPerform;
     }
 
-    private int getBalance(String cardNum){
+    @Override
+    public int getBalance(String cardNum){
         int balance = -1;
         for (int index = 0; index < accountList.size(); index++){
             if (cardNum.equals(accountList.get(index).getAccountNumber())){
@@ -181,5 +183,25 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
             }
         }
         return false;
+    }
+
+
+    public boolean isCardActive(String cardNum){
+        boolean status = true;
+        for (int index = 0; index < accountList.size(); index++){
+            if (cardNum.equals(accountList.get(index).getAccountNumber())){
+                status = accountList.get(index).isActive();
+            }
+        }
+        return status;
+    }
+
+    public void blockingCard(String cardNum){
+        for (int index = 0; index < accountList.size(); index++){
+            if (cardNum.equals(accountList.get(index).getAccountNumber())){
+                accountList.get(index).setActive(false);
+                atmFileDB.updateDb(accountList);
+            }
+        }
     }
 }
