@@ -28,9 +28,9 @@ public class TestAtm {
         CardFileDB cardFileDB = new CardFileDB();
         try {
             credentials = cardFileDB.readTextFile(CREDENTALS_DB_NAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println(e);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            System.out.println(exception.getMessage());
         }
 
         if (isLogin()) {
@@ -53,7 +53,6 @@ public class TestAtm {
                             exception.printStackTrace();
                             System.out.println(exception.getMessage());
                         }
-
                     }
                 } else {
                     System.out.println("No such operation! Select from 0 to 4");

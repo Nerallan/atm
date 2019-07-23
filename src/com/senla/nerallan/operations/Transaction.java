@@ -26,6 +26,8 @@ public abstract class Transaction {
                 return new Withdraw(account);
             case 3:
                 return new BalanceRequest(account);
+            case 0:
+                System.exit(1);
             default:
                 return null;
         }

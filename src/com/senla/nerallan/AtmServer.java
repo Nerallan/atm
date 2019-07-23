@@ -55,7 +55,9 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
                 if (balance >= amount && cashManager.isCashAmountAvailable(amount)) {
                     balance -= amount;
                     accountList.get(index).setBalance(balance);
-                    operationPerform = true;
+                    if (atmFileDB.updateDb(accountList)){
+                        operationPerform = true;
+                    }
                 }
             }
         }
@@ -72,7 +74,9 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
                     if (cashManager.isPossibleToDeposit(amount)) {
                         balance += amount;
                         accountList.get(index).setBalance(balance);
-                        operationPerform = true;
+                        if (atmFileDB.updateDb(accountList)){
+                            operationPerform = true;
+                        }
                     }
                 } catch (DepositAmountExceedException e) {
                     e.printStackTrace();
@@ -107,13 +111,15 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
             case 2:
                 if (withdraw(cardNumber, amount)) {
                     serverReply.put("Success", 1);
+                    serverReply.put("amount", amount);
                 } else {
                     serverReply.put("Success", 0);
+                    serverReply.put("amount", -1);
                 }
                 return serverReply;
             case 3:
                 int balance = getBalance(cardNumber);
-                if (balance != -1.0) {
+                if (balance != -1) {
                     serverReply.put("Success", 1);
                     serverReply.put("balance", balance);
                 } else {
@@ -121,6 +127,9 @@ public class AtmServer implements CardCredentialsValidator, AtmServerInterface {
                     serverReply.put("balance", -1);
                 }
                 return serverReply;
+            case 0:
+                atmFileDB.updateDb(accountList);
+                System.exit(1);
             default:
                 return serverReply;
         }

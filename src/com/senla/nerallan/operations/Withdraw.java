@@ -30,7 +30,7 @@ public class Withdraw extends Transaction {
     @Override
     public boolean displayMessage(Map<String, Integer> message, int transactionId) {
         if (message.get("Success") == 1){
-            consoleManager.setScreen("Please, take your cash ", false);
+            consoleManager.setScreen("Please, take your " + String.valueOf(message.get("amount")) + " cash ", false);
             return true;
         } else {
             consoleManager.setScreen("Your account doesn't have enough money to withdraw ", false);
