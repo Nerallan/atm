@@ -13,14 +13,15 @@ The user must enter a valid card number corresponding to the pattern and the cor
 
 Databases are called "atm_db" and "cards_credentials"
 Structure of DB's:
--cards_credentials:
-| Card Number   | Pin Code |
-| ------------- | ------------- |
-| 1111-2222-3333-4444  | 1111  |
-| 1111-1111-1111-1111  | 12345  |
+- cards_credentials:
 
--atm_db:
-| Card Number   | Balance | Timestamp   | isCardAcvive |
-| ------------- | ------------- | ------------- | ------------- |
-| 1111-2222-3333-4444  | 120  | 148103111550  | true  |
-| 1111-1111-1111-1111  | 300  | 148103111550  | false  |
+|Card Number         | Pin Code |
+| ------------------ | -------- | 
+|1111-2222-3333-4444 |  1111    |
+
+
+- atm_db:
+
+|Card Number           | Balance | Timestamp     | isCardAcvive |
+| ------------------   | ------- | --------------| -------------|
+|1111-2222-3333-4444   | 120     | 148103111550  | true         |
